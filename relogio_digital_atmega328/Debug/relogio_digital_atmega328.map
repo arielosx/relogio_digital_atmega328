@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.8  C:\Users\ariel\workspace\relogio_digital_atmega328\relogio_digital_atmega328\main.asm Sat Jul 12 14:47:11 2025
+AVRASM ver. 2.2.8  C:\Users\ariel\workspace\relogio_digital_atmega328\relogio_digital_atmega328\main.asm Sat Jul 12 16:25:05 2025
 
 
 EQU  SIGNATURE_000 0000001e
@@ -700,20 +700,18 @@ DEF  M            r21
 DEF  S            r22
 DEF  FLAG_H       r23
 DEF  AUX          r24
-EQU  TECLADO      00000006
-EQU  BUTTON_SKIP  00000004
+EQU  KEYBOARD     00000006
+EQU  BUTTON_SKIP  00000006
 EQU  BUTTON_UP    00000005
-EQU  BUTTON_DOWN  00000006
-CSEG principal    0000000b
-CSEG skip         00000034
-CSEG up           00000034
-CSEG down         00000034
-CSEG loop         00000016
-CSEG delay_1s     0000002a
-CSEG add_sec      00000019
-CSEG add_min      0000001d
-CSEG add_hour     00000022
-CSEG flip_flag    00000027
-CSEG delay_step3  0000002b
-CSEG delay_step2  0000002c
-CSEG delay_step1  0000002d
+EQU  BUTTON_DOWN  00000004
+CSEG principal    000000f0
+CSEG edit_clock   00000112
+CSEG loop         00000100
+CSEG add_sec      00000101
+CSEG add_min      00000105
+CSEG add_hour     0000010a
+CSEG flip_flag    0000010f
+CSEG skip         00000119
+CSEG up           0000011a
+CSEG down         0000011b
+CSEG return_change_timer 0000011b

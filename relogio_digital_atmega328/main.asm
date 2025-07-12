@@ -10,39 +10,41 @@
 .def FLAG_H = R23
 .def AUX = R24
 
-.equ TECLADO = PINC
-.equ BUTTON_SKIP = PC4
+.equ KEYBOARD = PINC
+.equ BUTTON_SKIP = PC6
 .equ BUTTON_UP = PC5
-.equ BUTTON_DOWN = PC6
+.equ BUTTON_DOWN = PC4
 
 .org 0x0
-rjmp principal
+rjmp principal ; reset
 
-.org 0x0008
-rjmp skip
-rjmp up
-rjmp down
+.org 0x8
+rjmp edit_clock ; PCINT1C
 
+.org 0x0F0
 principal:
 	ldi AUX, 0b0001111
 	out DDRC, AUX ; Define PC5, PC6 e PC7 como entradas
 	com AUX
 	out PORTC, AUX ; Zera as saídas da PORTC e ativa os resistores pull-up de PC5, PC6 e PC7
-	
-	ser	AUX ; AUX = 0xFF
-	out DDRB, AUX
-	out DDRD, AUX
-	
+
 	; Zera os registradores de hora
-	clr H
+	ldi H, 1
 	clr M
 	clr S
 	clr FLAG_H ; Inicia flag de turno como 0
-	
+
+	ldi AUX, 0b010
+	sts PCICR, AUX ; Ativa PCINT da porta C 
+
+	ldi AUX, 0b01110000
+	sts PCMSK1, AUX ; Habilita PCINT14, PCINT13 e PCINT12
+
+	clr AUX
+	sei
 loop:
-	rcall delay_1s
-	rcall add_sec
 	rjmp loop
+
 add_sec:
 	cpi S, 59
 	breq add_min
@@ -56,31 +58,35 @@ add_min:
 	ret
 add_hour:
 	clr M ; zera os minutos
-	cpi S, 11
+	cpi S, 12
 	breq flip_flag
 	inc S
 	ret
 flip_flag:
-	clr H ; zera as horas
-	com FLAG_H ; inverte a flag
+	ldi H, 1 ; pula de 12h para 1h
+	com FLAG_H ; inverte a flag (AM/PM)
 	ret
 	
-delay_1s:
-	ldi R19, 64
-delay_step3:
-	ldi R18, 128
-delay_step2:
-	ldi R17, 255
-delay_step1:
-	dec R17 ; 1 clock
-	brne delay_step1 ;  2 clocks
-	dec R18 ; 1 clock
-	brne delay_step2
-	dec R19
-	brne delay_step3
-	ret
-	
+
+edit_clock:
+	sbis KEYBOARD, BUTTON_SKIP ; ignora skip se o botão não foi pressionao
+	rjmp skip
+
+	sbis KEYBOARD, BUTTON_UP ; ignora skip se o botão não foi pressionao
+	rjmp up
+
+	sbis KEYBOARD, BUTTON_DOWN ; ignora skip se o botão não foi pressionao
+	rjmp down
+	reti
+
 skip:
+	; inserir código
+	rjmp return_change_timer
 up:
+	; inserir código
+	rjmp return_change_timer
 down:
+	; inserir código
+
+return_change_timer:
 	reti

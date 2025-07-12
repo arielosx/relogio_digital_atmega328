@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.8  C:\Users\ariel\workspace\relogio_digital_atmega328\relogio_digital_atmega328\main.asm Sat Jul 12 14:47:11 2025
+AVRASM ver. 2.2.8  C:\Users\ariel\workspace\relogio_digital_atmega328\relogio_digital_atmega328\main.asm Sat Jul 12 16:25:05 2025
 
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328Pdef.inc'
 C:\Users\ariel\workspace\relogio_digital_atmega328\relogio_digital_atmega328\main.asm(4): Including file 'C:\Users\ariel\workspace\relogio_digital_atmega328\relogio_digital_atmega328\../include/m328pdef.inc'
@@ -996,80 +996,86 @@ C:\Users\ariel\workspace\relogio_digital_atmega328\relogio_digital_atmega328\mai
                                  .def FLAG_H = R23
                                  .def AUX = R24
                                  
-                                 .equ TECLADO = PINC
-                                 .equ BUTTON_SKIP = PC4
+                                 .equ KEYBOARD = PINC
+                                 .equ BUTTON_SKIP = PC6
                                  .equ BUTTON_UP = PC5
-                                 .equ BUTTON_DOWN = PC6
+                                 .equ BUTTON_DOWN = PC4
                                  
                                  .org 0x0
-000000 c00a                      rjmp principal
+000000 c0ef                      rjmp principal ; reset
                                  
-                                 .org 0x0008
-000008 c02b                      rjmp skip
-000009 c02a                      rjmp up
-00000a c029                      rjmp down
+                                 .org 0x8
+000008 c109                      rjmp edit_clock ; PCINT1C
                                  
+                                 .org 0x0F0
                                  principal:
-00000b e08f                      	ldi AUX, 0b0001111
-00000c b987                      	out DDRC, AUX ; Define PC5, PC6 e PC7 como entradas
-00000d 9580                      	com AUX
-00000e b988                      	out PORTC, AUX ; Zera as saídas da PORTC e ativa os resistores pull-up de PC5, PC6 e PC7
-                                 	
-00000f ef8f                      	ser	AUX ; AUX = 0xFF
-000010 b984                      	out DDRB, AUX
-000011 b98a                      	out DDRD, AUX
-                                 	
+0000f0 e08f                      	ldi AUX, 0b0001111
+0000f1 b987                      	out DDRC, AUX ; Define PC5, PC6 e PC7 como entradas
+0000f2 9580                      	com AUX
+0000f3 b988                      	out PORTC, AUX ; Zera as saídas da PORTC e ativa os resistores pull-up de PC5, PC6 e PC7
+                                 
                                  	; Zera os registradores de hora
-000012 2744                      	clr H
-000013 2755                      	clr M
-000014 2766                      	clr S
-000015 2777                      	clr FLAG_H ; Inicia flag de turno como 0
-                                 	
+0000f4 e041                      	ldi H, 1
+0000f5 2755                      	clr M
+0000f6 2766                      	clr S
+0000f7 2777                      	clr FLAG_H ; Inicia flag de turno como 0
+                                 
+0000f8 e082                      	ldi AUX, 0b010
+0000f9 9380 0068                 	sts PCICR, AUX ; Ativa PCINT da porta C 
+                                 
+0000fb e780                      	ldi AUX, 0b01110000
+0000fc 9380 006c                 	sts PCMSK1, AUX ; Habilita PCINT14, PCINT13 e PCINT12
+                                 
+0000fe 2788                      	clr AUX
+0000ff 9478                      	sei
                                  loop:
-000016 d013                      	rcall delay_1s
-000017 d001                      	rcall add_sec
-000018 cffd                      	rjmp loop
+000100 cfff                      	rjmp loop
+                                 
                                  add_sec:
-000019 336b                      	cpi S, 59
-00001a f011                      	breq add_min
-00001b 9563                      	inc S
-00001c 9508                      	ret
+000101 336b                      	cpi S, 59
+000102 f011                      	breq add_min
+000103 9563                      	inc S
+000104 9508                      	ret
                                  add_min:
-00001d 2766                      	clr S ; zera os segundos
-00001e 335b                      	cpi M, 59
-00001f f011                      	breq add_hour
-000020 9553                      	inc M
-000021 9508                      	ret
+000105 2766                      	clr S ; zera os segundos
+000106 335b                      	cpi M, 59
+000107 f011                      	breq add_hour
+000108 9553                      	inc M
+000109 9508                      	ret
                                  add_hour:
-000022 2755                      	clr M ; zera os minutos
-000023 306b                      	cpi S, 11
-000024 f011                      	breq flip_flag
-000025 9563                      	inc S
-000026 9508                      	ret
+00010a 2755                      	clr M ; zera os minutos
+00010b 306c                      	cpi S, 12
+00010c f011                      	breq flip_flag
+00010d 9563                      	inc S
+00010e 9508                      	ret
                                  flip_flag:
-000027 2744                      	clr H ; zera as horas
-000028 9570                      	com FLAG_H ; inverte a flag
-000029 9508                      	ret
+00010f e041                      	ldi H, 1 ; pula de 12h para 1h
+000110 9570                      	com FLAG_H ; inverte a flag (AM/PM)
+000111 9508                      	ret
                                  	
-                                 delay_1s:
-00002a e430                      	ldi R19, 64
-                                 delay_step3:
-00002b e820                      	ldi R18, 128
-                                 delay_step2:
-00002c ef1f                      	ldi R17, 255
-                                 delay_step1:
-00002d 951a                      	dec R17 ; 1 clock
-00002e f7f1                      	brne delay_step1 ;  2 clocks
-00002f 952a                      	dec R18 ; 1 clock
-000030 f7d9                      	brne delay_step2
-000031 953a                      	dec R19
-000032 f7c1                      	brne delay_step3
-000033 9508                      	ret
-                                 	
+                                 
+                                 edit_clock:
+000112 9b36                      	sbis KEYBOARD, BUTTON_SKIP ; ignora skip se o botão não foi pressionao
+000113 c005                      	rjmp skip
+                                 
+000114 9b35                      	sbis KEYBOARD, BUTTON_UP ; ignora skip se o botão não foi pressionao
+000115 c004                      	rjmp up
+                                 
+000116 9b34                      	sbis KEYBOARD, BUTTON_DOWN ; ignora skip se o botão não foi pressionao
+000117 c003                      	rjmp down
+000118 9518                      	reti
+                                 
                                  skip:
+                                 	; inserir código
+000119 c001                      	rjmp return_change_timer
                                  up:
+                                 	; inserir código
+00011a c000                      	rjmp return_change_timer
                                  down:
-000034 9518                      	reti
+                                 	; inserir código
+                                 
+                                 return_change_timer:
+00011b 9518                      	reti
 
 
 RESOURCE USE INFORMATION
@@ -1089,37 +1095,37 @@ counted separately from r26..r31 here.
 "ATmega328P" register use summary:
 x  :   0 y  :   0 z  :   0 r0 :   0 r1 :   0 r2 :   0 r3 :   0 r4 :   0 
 r5 :   0 r6 :   0 r7 :   0 r8 :   0 r9 :   0 r10:   0 r11:   0 r12:   0 
-r13:   0 r14:   0 r15:   0 r16:   0 r17:   2 r18:   2 r19:   2 r20:   2 
-r21:   4 r22:   6 r23:   2 r24:   7 r25:   0 r26:   0 r27:   0 r28:   0 
+r13:   0 r14:   0 r15:   0 r16:   0 r17:   0 r18:   0 r19:   0 r20:   2 
+r21:   4 r22:   6 r23:   2 r24:   9 r25:   0 r26:   0 r27:   0 r28:   0 
 r29:   0 r30:   0 r31:   0 
-Registers used: 8 out of 35 (22.9%)
+Registers used: 5 out of 35 (14.3%)
 
 "ATmega328P" instruction use summary:
 .lds  :   0 .sts  :   0 adc   :   0 add   :   0 adiw  :   0 and   :   0 
 andi  :   0 asr   :   0 bclr  :   0 bld   :   0 brbc  :   0 brbs  :   0 
 brcc  :   0 brcs  :   0 break :   0 breq  :   3 brge  :   0 brhc  :   0 
 brhs  :   0 brid  :   0 brie  :   0 brlo  :   0 brlt  :   0 brmi  :   0 
-brne  :   3 brpl  :   0 brsh  :   0 brtc  :   0 brts  :   0 brvc  :   0 
+brne  :   0 brpl  :   0 brsh  :   0 brtc  :   0 brts  :   0 brvc  :   0 
 brvs  :   0 bset  :   0 bst   :   0 call  :   0 cbi   :   0 cbr   :   0 
-clc   :   0 clh   :   0 cli   :   0 cln   :   0 clr   :   7 cls   :   0 
+clc   :   0 clh   :   0 cli   :   0 cln   :   0 clr   :   6 cls   :   0 
 clt   :   0 clv   :   0 clz   :   0 com   :   2 cp    :   0 cpc   :   0 
-cpi   :   3 cpse  :   0 dec   :   3 eor   :   0 fmul  :   0 fmuls :   0 
+cpi   :   3 cpse  :   0 dec   :   0 eor   :   0 fmul  :   0 fmuls :   0 
 fmulsu:   0 icall :   0 ijmp  :   0 in    :   0 inc   :   3 jmp   :   0 
-ld    :   0 ldd   :   0 ldi   :   4 lds   :   0 lpm   :   0 lsl   :   0 
+ld    :   0 ldd   :   0 ldi   :   5 lds   :   0 lpm   :   0 lsl   :   0 
 lsr   :   0 mov   :   0 movw  :   0 mul   :   0 muls  :   0 mulsu :   0 
-neg   :   0 nop   :   0 or    :   0 ori   :   0 out   :   4 pop   :   0 
-push  :   0 rcall :   2 ret   :   5 reti  :   1 rjmp  :   5 rol   :   0 
-ror   :   0 sbc   :   0 sbci  :   0 sbi   :   0 sbic  :   0 sbis  :   0 
+neg   :   0 nop   :   0 or    :   0 ori   :   0 out   :   2 pop   :   0 
+push  :   0 rcall :   0 ret   :   4 reti  :   2 rjmp  :   8 rol   :   0 
+ror   :   0 sbc   :   0 sbci  :   0 sbi   :   0 sbic  :   0 sbis  :   3 
 sbiw  :   0 sbr   :   0 sbrc  :   0 sbrs  :   0 sec   :   0 seh   :   0 
-sei   :   0 sen   :   0 ser   :   1 ses   :   0 set   :   0 sev   :   0 
-sez   :   0 sleep :   0 spm   :   0 st    :   0 std   :   0 sts   :   0 
+sei   :   1 sen   :   0 ser   :   0 ses   :   0 set   :   0 sev   :   0 
+sez   :   0 sleep :   0 spm   :   0 st    :   0 std   :   0 sts   :   2 
 sub   :   0 subi  :   0 swap  :   0 tst   :   0 wdr   :   0 
-Instructions used: 14 out of 113 (12.4%)
+Instructions used: 13 out of 113 (11.5%)
 
 "ATmega328P" memory use summary [bytes]:
 Segment   Begin    End      Code   Data   Used    Size   Use%
 ---------------------------------------------------------------
-[.cseg] 0x000000 0x00006a     92      0     92   32768   0.3%
+[.cseg] 0x000000 0x000238     92      0     92   32768   0.3%
 [.dseg] 0x000100 0x000100      0      0      0    2048   0.0%
 [.eseg] 0x000000 0x000000      0      0      0    1024   0.0%
 
