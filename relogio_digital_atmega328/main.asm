@@ -11,9 +11,9 @@
 .def AUX = R24
 
 .equ KEYBOARD = PINC
-.equ BUTTON_SKIP = PC6
-.equ BUTTON_UP = PC5
-.equ BUTTON_DOWN = PC4
+.equ BUTTON_SKIP = PC5
+.equ BUTTON_UP = PC4
+.equ BUTTON_DOWN = PC3
 
 .org 0x0
 rjmp principal ; reset
@@ -23,10 +23,10 @@ rjmp edit_clock ; PCINT1C
 
 .org 0x0F0
 principal:
-	ldi AUX, 0b0001111
-	out DDRC, AUX ; Define PC5, PC6 e PC7 como entradas
+	ldi AUX, 0b1000111
+	out DDRC, AUX ; Define PC3, PC4 e PC5 como entradas
 	com AUX
-	out PORTC, AUX ; Zera as saídas da PORTC e ativa os resistores pull-up de PC5, PC6 e PC7
+	out KEYBOARD, AUX ; Zera as saídas da PORTC e ativa os resistores pull-up de PC3, PC4 e PC5
 
 	; Zera os registradores de hora
 	ldi H, 1
@@ -34,11 +34,12 @@ principal:
 	clr S
 	clr FLAG_H ; Inicia flag de turno como 0
 
+
 	ldi AUX, 0b010
 	sts PCICR, AUX ; Ativa PCINT da porta C 
 
-	ldi AUX, 0b01110000
-	sts PCMSK1, AUX ; Habilita PCINT14, PCINT13 e PCINT12
+	ldi AUX, 0b00111000
+	sts PCMSK1, AUX ; Habilita PCINT13, PCINT12 e PCINT11
 
 	clr AUX
 	sei
@@ -58,9 +59,9 @@ add_min:
 	ret
 add_hour:
 	clr M ; zera os minutos
-	cpi S, 12
+	cpi H, 12
 	breq flip_flag
-	inc S
+	inc H
 	ret
 flip_flag:
 	ldi H, 1 ; pula de 12h para 1h
