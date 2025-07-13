@@ -9,6 +9,7 @@
 .def S = R22 ; [0b00000..0b111011]
 .def FLAG_H = R23
 .def AUX = R24
+; .def EDIT = R25
 
 .equ KEYBOARD = PINC
 .equ BUTTON_SKIP = PC5
@@ -81,13 +82,72 @@ edit_clock:
 	reti
 
 skip:
-	; inserir código
+	; inc EDIT
+	; cpi EDIT, 3
+	; brne skip_end
+	; clr EDIT
+; skip_end:
+	; rcall debounce ;???
+	; ret
 	rjmp return_change_timer
 up:
-	; inserir código
+; seg_up:
+	; cpi EDIT, 0
+	; brne min_up
+	; rcall add_sec
+	; rjmp up_end
+
+; min_up:
+	; cpi EDIT, 1
+	; brne h_up
+	; rcall add_min
+	; rjmp up_end
+
+; h_up:
+	; rcall add_hour
+	
+; up_end:
+	; rcall debounce ; ??
+	; reti
 	rjmp return_change_timer
 down:
-	; inserir código
+; seg_down:
+	; cpi EDIT, 0
+	; brne min_down
+	; cpi S, 0
+	; brne seg_dec
+	; ldi S, 59
+	; rjmp down_end
 
+; seg_dec:
+	; dec S
+	; rjmp down_end
+
+; min_down:
+	; cpi EDIT, 1
+	; brne h_down
+	; cpi M, 0
+	; brne min_dec
+	; ldi M, 59
+	; rjmp down_end
+
+; min_dec:
+	; dec M
+	; rjmp down_end
+
+; h_down:
+	; cpi H, 1
+	; brne h_dec
+	; ldi H, 12
+	; rjmp down_end
+
+; h_dec:
+	; dec H
+	; rjmp down_end
+
+; down_end:
+	; rcall debounce ; n entendi ainda esta parte
+	; reti
+	rjmp return_change_timer
 return_change_timer:
 	reti
