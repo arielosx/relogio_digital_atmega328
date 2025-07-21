@@ -54,7 +54,7 @@ PCINT1_vect:
     mov AUX2, LAST_STATE ; estado anterior em aux2
     mov LAST_STATE, AUX ; atualiza LAST_STATE para o novo atual
 
-    cp LAST_BUTTON, 0
+    cpi LAST_BUTTON, 0
     breq check ; se LAST_BUTTON for igual a 0, não liga
     cpi LAST_BUTTON, 1
     breq liga_skip
