@@ -1,6 +1,6 @@
-﻿#include <avr/io.h> 
+#include <avr/io.h> 
  
-// O define a seguir Ã© necessÃ¡rio para subtrair 0x20 dos endereÃ§os de I/O. 
+// O define a seguir são necessÃ¡rio para subtrair 0x20 dos endereços de I/O. 
 #define __SFR_OFFSET 0 
  
 #define H				R20 // [0b0000..0b1011]
@@ -13,6 +13,9 @@
 #define BUTTON_SKIP		PC5
 #define BUTTON_UP		PC4
 #define BUTTON_DOWN 	PC3
+#define LAST_STATE      R24
+#define LAST_BUTTON     R25
+#define AUX2            R18
 
 .section .data 
 msg: .asciz "Tempo" 
@@ -57,6 +60,9 @@ main:
 	ldi AUX, 0b00111000
 	sts PCMSK1, AUX // Habilita PCINT13, PCINT12 e PCINT11
 
+	ldi LAST_BUTTON, 0         // Nenhum botão pressionado ainda
+	in LAST_STATE, KEYBOARD    // Lê o estado inicial dos botões
+
 	clr EDIT
 	sei
 loop:
@@ -86,15 +92,46 @@ flip_flag:
 	
 .global PCINT1_vect
 PCINT1_vect:
-	sbis KEYBOARD, BUTTON_SKIP // ignora skip se o botão não foi pressionao
-	rjmp skip
+    in AUX, KEYBOARD          // lê estado novo atual em aux
+    mov AUX2, LAST_STATE      // estado anterior em aux2
+    mov LAST_STATE, AUX       // atualiza LAST_STATE para o novo atual
 
-	sbis KEYBOARD, BUTTON_UP // ignora skip se o botão não foi pressionao
-	rjmp up
+  //  cpi LAST_BUTTON, 0
+ //   breq check
+  //  cpi LAST_BUTTON, 1
+  //  breq check
+ //   cpi LAST_BUTTON, 2
+ //   breq check
+  //  cpi LAST_BUTTON, 3
+ //   breq check
 
-	sbis KEYBOARD, BUTTON_DOWN // ignora skip se o botão não foi pressionao
-	rjmp down
-	reti
+check: // verifica a borda de descida
+    sbrc AUX2, BUTTON_SKIP
+    sbrs AUX, BUTTON_SKIP
+    rjmp do_skip
+    sbrc AUX2, BUTTON_UP
+    sbrs AUX, BUTTON_UP
+    rjmp do_up
+    sbrc AUX2, BUTTON_DOWN
+    sbrs AUX, BUTTON_DOWN
+    rjmp do_down
+
+    rjmp end_isr
+
+do_skip:
+    ldi LAST_BUTTON, 1
+    rjmp skip
+
+do_up:
+    ldi LAST_BUTTON, 2
+    rjmp up
+
+do_down:
+    ldi LAST_BUTTON, 3
+    rjmp down
+
+end_isr:
+    reti
 
 skip:
 	inc EDIT
