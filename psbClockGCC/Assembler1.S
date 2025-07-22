@@ -14,7 +14,7 @@
 #define BUTTON_UP		PC4
 #define BUTTON_DOWN 	PC3
 #define LAST_STATE      R24
-#define LAST_BUTTON     R25
+#define LAST_BUTTON     R19
 #define AUX2            R18
 
 .section .data 
