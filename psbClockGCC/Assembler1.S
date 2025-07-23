@@ -204,7 +204,7 @@ min_lcd_down:
 	ldi r24, M
 	rcall assemblyLcdPrintMinutes ; Atualização do LCD para os minutos
 	rjmp down_done
-h_lcd_down
+h_lcd_down:
 	ldi r24, H
 	rcall assemblyLcdPrintHours ; Atualização do LCD para as horas
 down_done:
