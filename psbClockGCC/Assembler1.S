@@ -4,16 +4,12 @@
 #define H			R20 // [0b0000..0b1011]
 #define M			R21 // [0b00000..0b111011]
 #define S			R22 // [0b00000..0b111011]
-#define FLAG_H			R23 // se FLAG_H = 1 entao "PM", senao "AM"
 #define AUX			R26
 #define EDIT			R25
 #define KEYBOARD		PINC
 #define BUTTON_SKIP		PC5
 #define BUTTON_UP		PC4
 #define BUTTON_DOWN 	        PC3
-#define LAST_STATE      	R17
-#define LAST_BUTTON    	 	R19
-#define AUX2            	R18
 .section .data 
 msg: .asciz "Tempo" 
  
@@ -31,7 +27,22 @@ main:
 	ldi r16, (1<<PD2)
     out DDRD, r16
 	ldi r16, 0
-	cbi   PORTD, PD2
+	cbi PORTD, PD2
+
+	ldi AUX, 0b1000111
+	out DDRC, AUX // Define PC3, PC4 e PC5 como entradas
+	com AUX
+	out KEYBOARD, AUX // Zera as saidas da PORTC e ativa os resistores pull-up de PC3, PC4 e PC5
+
+
+
+	ldi AUX, 0b010
+	sts PCICR, AUX // Ativa PCINT da porta C 
+	ldi AUX, 0b00111000
+	sts PCMSK1, AUX // Habilita PCINT13, PCINT12 e PCINT11
+	sei
+
+	ldi EDIT, 1
 
 	ldi r24, 20
 	mov H, r24
@@ -42,20 +53,6 @@ main:
 	ldi r24, 9
 	mov S, 9
 	rcall assemblyLcdPrintSeconds
-	ldi AUX, 0b1000111
-	out DDRC, AUX // Define PC3, PC4 e PC5 como entradas
-	com AUX
-	out KEYBOARD, AUX // Zera as saidas da PORTC e ativa os resistores pull-up de PC3, PC4 e PC5
-	// Zera os registradores de hora
-	clr FLAG_H // Inicia flag de turno como 0
-	ldi AUX, 0b010
-	sts PCICR, AUX // Ativa PCINT da porta C 
-	ldi AUX, 0b00111000
-	sts PCMSK1, AUX // Habilita PCINT13, PCINT12 e PCINT11
-	ldi LAST_BUTTON, 0         // Nenhum botao pressionado ainda
-	in LAST_STATE, KEYBOARD    // Le o estado inicial dos botoes
-	clr EDIT
-	sei
 loop:
 	rjmp loop
 
@@ -72,26 +69,26 @@ add_min:
 	ret
 add_hour:
 	clr M // zera os minutos
-	cpi H, 12
-	breq flip_flag
+	cpi H, 23
+	breq clr_hour
 	inc H
 	ret
-flip_flag:
-	ldi H, 1 // pula de 12h para 1h
-	com FLAG_H // inverte a flag (AM/PM)
+clr_hour:
+	clr H // pula de 23h para 0h
 	ret
 	
 .global PCINT1_vect
 PCINT1_vect:
 check:    			// Verifica a borda de descida
-		sbic TECLADO, BUTTON_SKIP
+		sbic KEYBOARD, BUTTON_SKIP
 		rjmp skip
-		sbic TECLADO, BUTTON_UP
-		rjmp up
-		sbic TECLADO, BUTTON_DOWN
-		rjmp down
+		;sbic KEYBOARD, BUTTON_UP
+		;rjmp up
+		;sbic KEYBOARD, BUTTON_DOWN
+		;rjmp down
+		reti
 skip:
-toggle_led
+	rcall toggle_led
 	inc EDIT
 	cpi EDIT, 3
 	brne skip_end
@@ -118,7 +115,7 @@ min_up:
 	rjmp end
 h_up:
 	cpi EDIT, 2
-	brne flip_flag_in_interruption // Pula para flip_flag_in_interruption se EDIT != 2
+	breq clr_edit // Pula para flip_flag_in_interruption se EDIT != 2
 	inc H
 	cpi H, 13
 	brlt end      	// Pula para up_end se H < 13
@@ -149,7 +146,7 @@ min_dec:
 
 h_down:
 	cpi EDIT, 2
-	brne flip_flag_in_interruption // Pula para flip_flag_in_interruption se EDIT != 2
+	breq clr_edit // Pula para flip_flag_in_interruption se EDIT != 2
 	cpi H, 1
 	brne h_dec  		// Pula para h_dec se H != 1
 	ldi H, 12   		// H = 12
@@ -157,7 +154,11 @@ h_down:
 
 h_dec:
 	dec H
-    
+
+clr_edit:
+	clr EDIT
+	rjmp end
+	    
 end:
 	rcall AssemblyLcdClear
 	mov r24, H
@@ -167,13 +168,6 @@ end:
 	mov r24, S
 	rcall assemblyLcdPrintSeconds
 	reti
-
-// !!! CUIDADO !!!
-// ESTA É A ÚNICA FORMA ALTERNATIVA DE SAIR DE UMA INTERRUPÇÃO
-flip_flag_in_interruption:
-	rcall flip_flag
-	reti
-
 
 toggle_led:
     tst   r16
