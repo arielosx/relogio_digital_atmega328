@@ -28,8 +28,8 @@ mcc_generated_files/system/src/system.d \
  ../mcc_generated_files/system/src/../../system/cpuint.h \
  ../mcc_generated_files/system/src/../../system/../system/utils/compiler.h \
  ../mcc_generated_files/system/src/../../tc0/tc0.h \
- c:\users\ariel\workspace\antigo\psbclockgcc\timer.h \
- c:\users\ariel\workspace\antigo\psbclockgcc\mcc_generated_files/system/pins.h \
+ ../mcc_generated_files/system/src/../../tc0/../../timer.h \
+ ../mcc_generated_files/system/src/../../tc0/../../mcc_generated_files/system/pins.h \
  ../mcc_generated_files/system/src/../../tc0/../system/utils/compiler.h
 
 ../mcc_generated_files/system/src/../system.h:
@@ -86,8 +86,8 @@ c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\
 
 ../mcc_generated_files/system/src/../../tc0/tc0.h:
 
-c:\users\ariel\workspace\antigo\psbclockgcc\timer.h:
+../mcc_generated_files/system/src/../../tc0/../../timer.h:
 
-c:\users\ariel\workspace\antigo\psbclockgcc\mcc_generated_files/system/pins.h:
+../mcc_generated_files/system/src/../../tc0/../../mcc_generated_files/system/pins.h:
 
 ../mcc_generated_files/system/src/../../tc0/../system/utils/compiler.h:

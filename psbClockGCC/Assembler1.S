@@ -27,6 +27,12 @@ rjmp PCINT1_vect // PCINT1C
 main:
 	rcall assemblySYSTEM_Initialize
 	rcall assemblyLcdInit
+
+	ldi r16, (1<<PD2)
+    out DDRD, r16
+	ldi r16, 0
+	cbi   PORTD, PD2
+
 	ldi r24, 20
 	mov H, r24
 	rcall assemblyLcdPrintHours
@@ -77,6 +83,7 @@ flip_flag:
 	
 .global PCINT1_vect
 PCINT1_vect:
+
         in AUX, KEYBOARD      	// Le estado novo atual em aux
         mov AUX2, LAST_STATE   	// Estado anterior em aux2
         mov LAST_STATE, AUX    	// Atualiza LAST_STATE para o novo anterior
@@ -110,6 +117,7 @@ end_isr:
         reti
 
 skip:
+
 	inc EDIT
 	cpi EDIT, 3
 	brne skip_end
@@ -118,6 +126,7 @@ skip_end:
 	reti
 
 up:
+rcall toggle_led
 seg_up:
 	cpi EDIT, 0 
 	brne min_up       	// Pula para min_up se a EDIT != 0
@@ -191,4 +200,18 @@ end:
 flip_flag_in_interruption:
 	rcall flip_flag
 	reti
+
+
+toggle_led:
+    tst   r16
+    breq  turn_on 
+    cbi   PORTD, PD2
+    ldi   r16, 0 
+    ret
+
+turn_on:
+    sbi   PORTD, PD2
+    ldi   r16, 1
+    ret
+
 .end

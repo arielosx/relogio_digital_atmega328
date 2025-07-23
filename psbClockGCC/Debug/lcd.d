@@ -28,7 +28,7 @@ lcd.d lcd.o: .././lcd.cpp .././lcd.h \
  .././mcc_generated_files/system/../system/cpuint.h \
  .././mcc_generated_files/system/../system/../system/utils/compiler.h \
  .././mcc_generated_files/system/../tc0/tc0.h \
- c:\users\ariel\workspace\antigo\psbclockgcc\timer.h \
+ .././mcc_generated_files/system/../tc0/../../timer.h \
  .././mcc_generated_files/system/../tc0/../system/utils/compiler.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\pgmspace.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\stdio.h \
@@ -97,7 +97,7 @@ c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\
 
 .././mcc_generated_files/system/../tc0/tc0.h:
 
-c:\users\ariel\workspace\antigo\psbclockgcc\timer.h:
+.././mcc_generated_files/system/../tc0/../../timer.h:
 
 .././mcc_generated_files/system/../tc0/../system/utils/compiler.h:
 
