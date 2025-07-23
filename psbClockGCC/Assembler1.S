@@ -1,11 +1,11 @@
 #include <avr/io.h> 
 // O que define a seguir sao necessarios para subtrair 0x20 dos enderecos de I/O. 
 #define __SFR_OFFSET 0 
-#define H			R30 // [0b0000..0b1011]
+#define H			R17 // [0b0000..0b1011]
 #define M			R29 // [0b00000..0b111011]
 #define S			R28 // [0b00000..0b111011]
-#define AUX			R26
-#define EDIT			R31
+#define AUX			R31
+#define EDIT			R21
 #define KEYBOARD		PINC
 #define BUTTON_SKIP		PC5
 #define BUTTON_UP		PC4
@@ -44,8 +44,8 @@ main:
 	clr H
 	clr M
 	clr S
-	clr EDIT
-
+	
+	rcall AssemblyLcdClear
 	mov R24, H
 	rcall assemblyLcdPrintHours
 	nop
@@ -55,6 +55,10 @@ main:
 	mov R24, S
 	rcall assemblyLcdPrintSeconds
 	nop
+	
+	clr EDIT
+
+	
 loop:
 	rjmp loop
 
@@ -81,6 +85,7 @@ clr_hour:
 	
 .global PCINT1_vect
 PCINT1_vect:
+		rcall delay_100ms
 		// verifica qual botão foi acionado
 		sbis KEYBOARD, BUTTON_SKIP 
 		rjmp skip
@@ -109,7 +114,7 @@ seg_up:
 	rjmp end
 min_up:
 	cpi EDIT, 1
-	breq h_up         	// Pula para h_up se a EDIT != 1
+	brne h_up         	// Pula para h_up se a EDIT != 1
 	inc M
 	cpi M, 60         	// Confere se M < 60
 	brne end       	// Pula para up_end se M < 60
@@ -154,10 +159,11 @@ dec_h:
 	    
 end:
 	rcall AssemblyLcdClear
-	nop
 	mov r24, H
+	nop
 	rcall assemblyLcdPrintHours
 	mov r24, M
+	nop
 	rcall assemblyLcdPrintMinutes
 	mov r24, S
 	rcall assemblyLcdPrintSeconds
@@ -165,15 +171,30 @@ end:
 	reti
 
 toggle_led:
-    tst   r16
+    ;;tst   r16
     breq  turn_on 
     cbi   PORTD, PD2
-    ldi   r16, 0 
+    ;;ldi   r16, 0 
     ret
 
 turn_on:
     sbi   PORTD, PD2
-    ldi   r16, 1
+    ;;ldi   r16, 1
     ret
+
+delay_100ms:
+	ldi R23, 32
+delay_3:
+	ldi R24, 64
+delay_2:
+	ldi R25, 10
+delay_1:
+	dec R25
+	brne delay_1
+	dec R24
+	brne delay_2
+	dec R23
+	brne delay_3
+	ret
 
 .end

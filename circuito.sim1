@@ -30,6 +30,12 @@
 
 <item itemtype="Led" CircId="Led-34" mainComp="false" Show_id="false" Show_Val="false" Pos="-372,-244" rotation="0" hflip="1" vflip="1" label="Led-34" idLabPos="-16,-24" labelrot="0" valLabPos="-16,20" valLabRot="0" Color="Yellow" Grounded="false" Threshold="2.4 V" MaxCurrent="30 mA" Resistance="0.6 Ω" />
 
+<item itemtype="TextComponent" CircId="TextComponent-36" mainComp="false" Show_id="false" Show_Val="false" Pos="-544,-16" rotation="0" hflip="1" vflip="1" label="TextComponent-36" idLabPos="-16,-24" labelrot="0" valLabPos="-16,20" valLabRot="0" Margin="5 _px" Border="1 _px" Color="#ffffdc" Opacity="1" Font="Helvetica [Cronyx]" Font_Color="#000080" Font_Size="10 _px" Fixed_Width="false" Text="SKIP" />
+
+<item itemtype="TextComponent" CircId="TextComponent-37" mainComp="false" Show_id="false" Show_Val="false" Pos="-636,-12" rotation="0" hflip="1" vflip="1" label="TextComponent-37" idLabPos="-16,-24" labelrot="0" valLabPos="-16,20" valLabRot="0" Margin="5 _px" Border="1 _px" Color="#ffffdc" Opacity="1" Font="Helvetica [Cronyx]" Font_Color="#000080" Font_Size="10 _px" Fixed_Width="false" Text="UP" />
+
+<item itemtype="TextComponent" CircId="TextComponent-38" mainComp="false" Show_id="false" Show_Val="false" Pos="-744,-12" rotation="0" hflip="1" vflip="1" label="TextComponent-38" idLabPos="-16,-24" labelrot="0" valLabPos="-16,20" valLabRot="0" Margin="5 _px" Border="1 _px" Color="#ffffdc" Opacity="1" Font="Helvetica [Cronyx]" Font_Color="#000080" Font_Size="10 _px" Fixed_Width="false" Text="DOWN" />
+
 <item itemtype="Node" CircId="Node-23" mainComp="false" Pos="-476,-64" />
 
 <item itemtype="Node" CircId="Node-26" mainComp="false" Pos="-540,-208" />
