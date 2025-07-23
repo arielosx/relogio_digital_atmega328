@@ -80,12 +80,12 @@ clr_hour:
 .global PCINT1_vect
 PCINT1_vect:
 check:    			// Verifica a borda de descida
-		sbic KEYBOARD, BUTTON_SKIP
+		sbis KEYBOARD, BUTTON_SKIP
 		rjmp skip
-		;sbic KEYBOARD, BUTTON_UP
-		;rjmp up
-		;sbic KEYBOARD, BUTTON_DOWN
-		;rjmp down
+		sbis KEYBOARD, BUTTON_UP
+		rjmp up
+		sbis KEYBOARD, BUTTON_DOWN
+		rjmp down
 		reti
 skip:
 	rcall toggle_led
