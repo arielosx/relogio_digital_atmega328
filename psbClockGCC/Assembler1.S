@@ -83,41 +83,15 @@ flip_flag:
 	
 .global PCINT1_vect
 PCINT1_vect:
-
-        in AUX, KEYBOARD      	// Le estado novo atual em aux
-        mov AUX2, LAST_STATE   	// Estado anterior em aux2
-        mov LAST_STATE, AUX    	// Atualiza LAST_STATE para o novo anterior
-
 check:    			// Verifica a borda de descida
-        sbrc AUX2, BUTTON_SKIP
-        sbrs AUX, BUTTON_SKIP
-        rjmp do_skip
-        sbrc AUX2, BUTTON_UP
-        sbrs AUX, BUTTON_UP
-        rjmp do_up
-        sbrc AUX2, BUTTON_DOWN
-        sbrs AUX, BUTTON_DOWN
-        rjmp do_down
-
-        rjmp end_isr
-
-do_skip:
-        ldi LAST_BUTTON, 1
-        rjmp skip
-
-do_up:
-        ldi LAST_BUTTON, 2
-        rjmp up
-
-do_down:
-        ldi LAST_BUTTON, 3
-        rjmp down
-
-end_isr:
-        reti
-
+		sbic TECLADO, BUTTON_SKIP
+		rjmp skip
+		sbic TECLADO, BUTTON_UP
+		rjmp up
+		sbic TECLADO, BUTTON_DOWN
+		rjmp down
 skip:
-
+toggle_led
 	inc EDIT
 	cpi EDIT, 3
 	brne skip_end
@@ -126,7 +100,6 @@ skip_end:
 	reti
 
 up:
-rcall toggle_led
 seg_up:
 	cpi EDIT, 0 
 	brne min_up       	// Pula para min_up se a EDIT != 0
