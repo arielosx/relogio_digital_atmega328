@@ -18,6 +18,8 @@ msg: .asciz "Tempo"
 rjmp main // reset
 .org 0x8
 rjmp PCINT1_vect // PCINT1C
+.org 0x10
+rjmp TIMER1_OVF_vect
 .global main 
 .org 0xF0
 main:
@@ -39,6 +41,18 @@ main:
 	sts PCICR, AUX // Ativa PCINT da porta C 
 	ldi AUX, 0b00111000
 	sts PCMSK1, AUX // Habilita PCINT13, PCINT12 e PCINT11
+
+	
+	;Prescaler de 256 para definir a freq como 1Hz 
+    ldi AUX, 0b100 
+    sts TCCR1B, AUX ;(1<<CS22)|(1<<CS21)
+	
+	; ativa interrupção por overflow de TIMER1
+	ldi AUX, 0b1
+    sts TIMSK1, AUX
+	
+
+
 	sei
 
 	clr H
@@ -83,10 +97,23 @@ clr_hour:
 	clr H // pula de 23h para 0h
 	ret
 	
+
+
+	
+.global TIMER1_OVF_vect
+TIMER1_OVF_vect:
+	sei
+	rcall delay_100ms
+	rcall toggle_led
+	rcall add_sec
+	rjmp end
+timer_isr_end:
+	reti
+
 .global PCINT1_vect
 PCINT1_vect:
 		rcall delay_100ms
-		// verifica qual bot�o foi acionado
+		// verifica qual botão foi acionado
 		sbis KEYBOARD, BUTTON_SKIP 
 		rjmp skip
 		sbis KEYBOARD, BUTTON_UP
@@ -196,5 +223,8 @@ delay_1:
 	dec R23
 	brne delay_3
 	ret
+
+
+
 
 .end
