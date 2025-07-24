@@ -10,6 +10,9 @@
 #define BUTTON_SKIP		PC5
 #define BUTTON_UP		PC4
 #define BUTTON_DOWN 	PC3
+#define FLAGS			R16
+#define INT_BIT			0
+#define TMR_BIT			1
 .section .data 
 msg: .asciz "Tempo" 
  
@@ -71,15 +74,24 @@ main:
 	nop
 	
 	clr EDIT
+	
 
 	
 loop:
+	sbrc FLAGS, INT_BIT
+	rjmp PCINT1_Handler
+	sbrc FLAGS, TMR_BIT
+	rjmp TIMER1_Handler
 	rjmp loop
 
 add_sec:
+	cpi EDIT, 0
+	BRNE stopped
 	cpi S, 59
 	breq add_min
 	inc S
+	ret
+stopped:
 	ret
 add_min:
 	clr S // zera os segundos
@@ -98,40 +110,49 @@ clr_hour:
 	ret
 	
 
-
 	
 .global TIMER1_OVF_vect
 TIMER1_OVF_vect:
-	sei
-	rcall delay_100ms
-	rcall toggle_led
-	rcall add_sec
-	rjmp end
-timer_isr_end:
+	sbr FLAGS, (1<<TMR_BIT)
 	reti
 
 .global PCINT1_vect
 PCINT1_vect:
-		rcall delay_100ms
-		// verifica qual botão foi acionado
-		sbis KEYBOARD, BUTTON_SKIP 
-		rjmp skip
-		sbis KEYBOARD, BUTTON_UP
-		rjmp up
-		sbis KEYBOARD, BUTTON_DOWN
-		rjmp down
-		reti
+	sbr FLAGS, (1<<INT_BIT)
+	reti
+
+
+
+TIMER1_Handler:
+	rcall toggle_led
+	rcall add_sec
+	cbr FLAGS, (1<<TMR_BIT)
+	cpi EDIT, 0
+	BRNE loop
+	rjmp end
+
+
+PCINT1_Handler:
+	rcall delay_100ms
+	cbr FLAGS, (1<<INT_BIT)
+	sbis KEYBOARD, BUTTON_SKIP 
+	rjmp skip
+	sbis KEYBOARD, BUTTON_UP
+	rjmp up
+	sbis KEYBOARD, BUTTON_DOWN
+	rjmp down
+	rjmp end 
 skip:
 	inc EDIT
 	cpi EDIT, 3
 	brne skip_end
 	clr EDIT
 skip_end:
-	reti
+	rjmp loop
 
 up:
 seg_up:
-	cpi EDIT, 0 
+	cpi EDIT, 1 
 	brne min_up       	// Pula para min_up se a EDIT != 0
 	inc S
 	rcall toggle_led
@@ -140,7 +161,7 @@ seg_up:
 	clr S             	// S = 0
 	rjmp end
 min_up:
-	cpi EDIT, 1
+	cpi EDIT, 2
 	brne h_up         	// Pula para h_up se a EDIT != 1
 	inc M
 	cpi M, 60         	// Confere se M < 60
@@ -152,10 +173,11 @@ h_up:
 	cpi H, 24
 	brne end      	// Pula para up_end se H < 13
 	ldi H, 0         	// H = 0
+	rjmp end
 
 down:
 seg_down:
-	cpi EDIT, 0
+	cpi EDIT, 1
 	brne min_down  		// Pula para min_down se EDIT != 0
 	cpi S, 0
 	brne dec_seg    	// Pula para dec_seg se S != 0
@@ -166,7 +188,7 @@ dec_seg:
 	rjmp end
 
 min_down:
-	cpi EDIT, 1
+	cpi EDIT, 2
 	brne h_down   		// Pula para h_down se EDIT != 1
 	cpi M, 0
 	brne dec_min   		// Pula para dec_min se M != 0
@@ -195,7 +217,7 @@ end:
 	mov r24, S
 	rcall assemblyLcdPrintSeconds
 	nop
-	reti
+	rjmp loop
 
 toggle_led:
     ;;tst   r16
