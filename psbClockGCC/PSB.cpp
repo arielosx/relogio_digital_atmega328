@@ -51,23 +51,25 @@ extern "C" void assemblyLcdPrintHours(uint8_t value)
 	getDigits(value, &digits[0]);
 	lcd.write(digits[1]);
 	lcd.write(digits[0]);
-	lcd.write(":");
+	//lcd.write(":");
 	
 }
 
 extern "C" void assemblyLcdPrintMinutes(uint8_t value)
 {
 	uint8_t digits[2] = {0, 0};
+	lcd.write(":");
 	getDigits(value, &digits[0]);
 	lcd.write(digits[1]);
 	lcd.write(digits[0]);
-	lcd.write(":");
+	//lcd.write(":");
 }
 
 extern "C" void assemblyLcdPrintSeconds(uint8_t value)
 {
 	uint8_t digits[2] = {0, 0};
 	getDigits(value, &digits[0]);
+	lcd.write(":");
 	lcd.write(digits[1]);
 	lcd.write(digits[0]);
 	
@@ -85,6 +87,11 @@ extern "C" void AssemblyLcdClear()
 {
 	lcd.clear();
 }
+extern "C" void assemblyLcdCursor()
+{
+	lcd.write("<");
+}
+
 
 
 

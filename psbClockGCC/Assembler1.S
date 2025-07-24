@@ -54,7 +54,7 @@ main:
 	ldi AUX, 0b1
     sts TIMSK1, AUX
 	
-
+	ldi r18, 0
 
 	sei
 
@@ -144,7 +144,7 @@ PCINT1_Handler:
 	rjmp end 
 skip:
 	inc EDIT
-	cpi EDIT, 3
+	cpi EDIT, 4
 	brne skip_end
 	clr EDIT
 skip_end:
@@ -155,7 +155,6 @@ seg_up:
 	cpi EDIT, 1 
 	brne min_up       	// Pula para min_up se a EDIT != 0
 	inc S
-	rcall toggle_led
 	cpi S, 60
 	brne end       	// Pula para up_end se S < 60
 	clr S             	// S = 0
@@ -169,6 +168,8 @@ min_up:
 	clr M             	// M = 0
 	rjmp end
 h_up:
+	cpi EDIT, 3
+	brne end
 	inc H
 	cpi H, 24
 	brne end      	// Pula para up_end se H < 13
@@ -199,6 +200,8 @@ dec_min:
 	rjmp end
 
 h_down:
+	cpi EDIT, 3
+	brne end
 	cpi H, 0
 	brne dec_h  		// Pula para dec_h se H != 0
 	ldi H, 23  		// H = 23
@@ -211,24 +214,41 @@ end:
 	mov r24, H
 	nop
 	rcall assemblyLcdPrintHours
+	cpi EDIT, 3
+	BREQ cursorHours
+returnHours:
 	mov r24, M
 	nop
 	rcall assemblyLcdPrintMinutes
+	cpi EDIT, 2
+	BREQ cursorMinutes
+returnMinutes:
 	mov r24, S
 	rcall assemblyLcdPrintSeconds
+	cpi EDIT, 1
+	BREQ cursorSeconds
+returnSeconds:
 	nop
 	rjmp loop
 
+cursorHours:
+	rcall assemblyLcdCursor
+	rjmp returnHours
+cursorMinutes:
+	rcall assemblyLcdCursor
+	rjmp returnMinutes
+cursorSeconds:
+	rcall assemblyLcdCursor
+	rjmp returnSeconds
+
 toggle_led:
-    ;;tst   r16
-    breq  turn_on 
-    cbi   PORTD, PD2
-    ;;ldi   r16, 0 
+    sbis PORTD, PD2    ; Se o bit estiver SET (1), pula a próxima linha
+    rjmp turn_on       ; Se estiver CLEAR (0), acende
+    cbi PORTD, PD2     ; Apaga o LED
     ret
 
 turn_on:
-    sbi   PORTD, PD2
-    ;;ldi   r16, 1
+    sbi PORTD, PD2     ; Acende o LED
     ret
 
 delay_100ms:

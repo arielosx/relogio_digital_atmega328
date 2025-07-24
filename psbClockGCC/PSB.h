@@ -34,6 +34,8 @@ void getDigits(uint8_t value, uint8_t *digits);
 
 void AssemblyLcdClear();
 
+void assemblyLcdCursor();
+
 #ifdef __cplusplus
 }
 #endif
