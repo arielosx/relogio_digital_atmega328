@@ -148,8 +148,22 @@ skip:
 	brne skip_end
 	clr EDIT
 skip_end:
+	cpi EDIT, 1
+	breq turnTmr1Off
+	cpi EDIT, 0
+	breq turnTmr1On
 	rjmp loop
 
+turnTmr1On:
+	ldi AUX, 0b1
+    sts TIMSK1, AUX
+	rjmp loop
+turnTmr1Off:
+	ldi AUX, 0x00
+	sts TIMSK1, AUX
+	sts TCNT1H, AUX   
+	sts TCNT1L, AUX   
+	rjmp loop
 up:
 seg_up:
 	cpi EDIT, 1 
@@ -210,6 +224,8 @@ dec_h:
 	dec H
 	    
 end:
+	ldi AUX, 0b00000000
+	sts PCMSK1, AUX 
 	rcall AssemblyLcdClear
 	mov r24, H
 	nop
@@ -229,6 +245,8 @@ returnMinutes:
 	BREQ cursorSeconds
 returnSeconds:
 	nop
+	ldi AUX, 0b00111000
+	sts PCMSK1, AUX 
 	rjmp loop
 
 cursorHours:
