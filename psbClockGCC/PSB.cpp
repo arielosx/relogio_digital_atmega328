@@ -91,6 +91,10 @@ extern "C" void assemblyLcdCursor()
 {
 	lcd.write("<");
 }
+extern "C" void assemblyLcdReset()
+{
+	lcd.init();
+}
 
 
 

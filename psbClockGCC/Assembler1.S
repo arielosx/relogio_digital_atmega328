@@ -53,6 +53,9 @@ main:
 	; ativa interrupção por overflow de TIMER1
 	ldi AUX, 0b1
     sts TIMSK1, AUX
+	ldi AUX, 0x00
+	sts TCNT1H, AUX   
+	sts TCNT1L, AUX 
 	
 	ldi r18, 0
 
@@ -226,6 +229,10 @@ dec_h:
 end:
 	ldi AUX, 0b00000000
 	sts PCMSK1, AUX 
+	//sts TIMSK1, AUX
+	ldi AUX, 0x00
+	//sts TCNT1H, AUX   
+	//sts TCNT1L, AUX 
 	rcall AssemblyLcdClear
 	mov r24, H
 	nop
@@ -247,6 +254,8 @@ returnSeconds:
 	nop
 	ldi AUX, 0b00111000
 	sts PCMSK1, AUX 
+	ldi AUX, 0b1
+	//sts TIMSK1, AUX
 	rjmp loop
 
 cursorHours:

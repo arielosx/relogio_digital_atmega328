@@ -10,5 +10,6 @@
 
 void delayMicroseconds(uint16_t us)
 {
+	timer_us = 0;
 	while(timer_us < us){}
 }

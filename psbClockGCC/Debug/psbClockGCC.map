@@ -113,6 +113,8 @@ Discarded input sections
                 0x00000000        0xc PSB.o
  .text.assemblyLcdPrintTest
                 0x00000000        0xe PSB.o
+ .text.assemblyLcdReset
+                0x00000000        0xa PSB.o
  .text          0x00000000        0x0 timer.o
  .data          0x00000000        0x0 timer.o
  .bss           0x00000000        0x0 timer.o
@@ -335,7 +337,7 @@ END GROUP
 .rela.plt
  *(.rela.plt)
 
-.text           0x00000000      0x706
+.text           0x00000000      0x71c
  *(.vectors)
  .vectors       0x00000000       0x68 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.7.374/gcc/dev/atmega328p/avr5/crtatmega328p.o
                 0x00000000                __vector_default
@@ -420,99 +422,99 @@ END GROUP
                 0x000000ba                __vector_16
                 0x000000ba                __vector_18
                 0x000000ba                __vector_20
- .text          0x000000be      0x26e Assembler1.o
+ .text          0x000000be      0x27c Assembler1.o
                 0x000001ae                main
-                0x0000022a                __vector_13
-                0x0000022e                __vector_4
-                0x0000032c                . = ALIGN (0x2)
+                0x00000234                __vector_13
+                0x00000238                __vector_4
+                0x0000033a                . = ALIGN (0x2)
  *(.text.*)
  .text._ZN3LCDC2Ev
-                0x0000032c        0x2 lcd.o
-                0x0000032c                _ZN3LCDC1Ev
-                0x0000032c                _ZN3LCDC2Ev
+                0x0000033a        0x2 lcd.o
+                0x0000033a                _ZN3LCDC1Ev
+                0x0000033a                _ZN3LCDC2Ev
  .text._ZN3LCD11pulseEnableEv
-                0x0000032e       0x3c lcd.o
-                0x0000032e                _ZN3LCD11pulseEnableEv
+                0x0000033c       0x3c lcd.o
+                0x0000033c                _ZN3LCD11pulseEnableEv
  .text._ZN3LCD10write4bitsEh
-                0x0000036a       0x4c lcd.o
-                0x0000036a                _ZN3LCD10write4bitsEh
+                0x00000378       0x4c lcd.o
+                0x00000378                _ZN3LCD10write4bitsEh
  .text._ZN3LCD4sendEhh
-                0x000003b6       0x3c lcd.o
-                0x000003b6                _ZN3LCD4sendEhh
+                0x000003c4       0x3c lcd.o
+                0x000003c4                _ZN3LCD4sendEhh
  .text._ZN3LCD5writeEh
-                0x000003f2        0xc lcd.o
-                0x000003f2                _ZN3LCD5writeEh
+                0x00000400        0xc lcd.o
+                0x00000400                _ZN3LCD5writeEh
  .text._ZN3LCD5writeEPKc
-                0x000003fe       0x2a lcd.o
-                0x000003fe                _ZN3LCD5writeEPKc
+                0x0000040c       0x2a lcd.o
+                0x0000040c                _ZN3LCD5writeEPKc
  .text._ZN3LCD7displayEv
-                0x00000428       0x14 lcd.o
-                0x00000428                _ZN3LCD7displayEv
+                0x00000436       0x14 lcd.o
+                0x00000436                _ZN3LCD7displayEv
  .text._ZN3LCD5clearEv
-                0x0000043c       0x12 lcd.o
-                0x0000043c                _ZN3LCD5clearEv
+                0x0000044a       0x12 lcd.o
+                0x0000044a                _ZN3LCD5clearEv
  .text._ZN3LCD5beginEhhh
-                0x0000044e       0x8e lcd.o
-                0x0000044e                _ZN3LCD5beginEhhh
+                0x0000045c       0x8e lcd.o
+                0x0000045c                _ZN3LCD5beginEhhh
  .text._ZN3LCD4initEv
-                0x000004dc       0x2a lcd.o
-                0x000004dc                _ZN3LCD4initEv
+                0x000004ea       0x2a lcd.o
+                0x000004ea                _ZN3LCD4initEv
  .text.CPU_Initialize
-                0x00000506        0xe mcc_generated_files/system/src/cpu.o
-                0x00000506                CPU_Initialize
+                0x00000514        0xe mcc_generated_files/system/src/cpu.o
+                0x00000514                CPU_Initialize
  .text.CPUINT_Initialize
-                0x00000514        0xa mcc_generated_files/system/src/cpuint.o
-                0x00000514                CPUINT_Initialize
+                0x00000522        0xa mcc_generated_files/system/src/cpuint.o
+                0x00000522                CPUINT_Initialize
  .text.LcdTimer_Initialize
-                0x0000051e       0x1a mcc_generated_files/tc0/src/tc0.o
-                0x0000051e                LcdTimer_Initialize
+                0x0000052c       0x1a mcc_generated_files/tc0/src/tc0.o
+                0x0000052c                LcdTimer_Initialize
  .text.__vector_14
-                0x00000538       0x32 mcc_generated_files/tc0/src/tc0.o
-                0x00000538                __vector_14
+                0x00000546       0x32 mcc_generated_files/tc0/src/tc0.o
+                0x00000546                __vector_14
  .text.pinWrite
-                0x0000056a       0x16 pinWrite.o
-                0x0000056a                pinWrite
+                0x00000578       0x16 pinWrite.o
+                0x00000578                pinWrite
  .text._Z41__static_initialization_and_destruction_0ii
-                0x00000580       0x14 PSB.o
+                0x0000058e       0x14 PSB.o
  .text._Z22PIN_MANAGER_Initializev
-                0x00000594       0x18 PSB.o
-                0x00000594                _Z22PIN_MANAGER_Initializev
+                0x000005a2       0x18 PSB.o
+                0x000005a2                _Z22PIN_MANAGER_Initializev
  .text.assemblyLcdInit
-                0x000005ac        0xa PSB.o
-                0x000005ac                assemblyLcdInit
+                0x000005ba        0xa PSB.o
+                0x000005ba                assemblyLcdInit
  .text.assemblySYSTEM_Initialize
-                0x000005b6       0x12 PSB.o
-                0x000005b6                assemblySYSTEM_Initialize
+                0x000005c4       0x12 PSB.o
+                0x000005c4                assemblySYSTEM_Initialize
  .text.getDigits
-                0x000005c8       0x22 PSB.o
-                0x000005c8                getDigits
+                0x000005d6       0x22 PSB.o
+                0x000005d6                getDigits
  .text.assemblyLcdPrintHours
-                0x000005ea       0x4a PSB.o
-                0x000005ea                assemblyLcdPrintHours
+                0x000005f8       0x4a PSB.o
+                0x000005f8                assemblyLcdPrintHours
  .text.assemblyLcdPrintMinutes
-                0x00000634       0x4a PSB.o
-                0x00000634                assemblyLcdPrintMinutes
+                0x00000642       0x4a PSB.o
+                0x00000642                assemblyLcdPrintMinutes
  .text.assemblyLcdPrintSeconds
-                0x0000067e       0x42 PSB.o
-                0x0000067e                assemblyLcdPrintSeconds
+                0x0000068c       0x42 PSB.o
+                0x0000068c                assemblyLcdPrintSeconds
  .text.AssemblyLcdClear
-                0x000006c0        0xa PSB.o
-                0x000006c0                AssemblyLcdClear
+                0x000006ce        0xa PSB.o
+                0x000006ce                AssemblyLcdClear
  .text.assemblyLcdCursor
-                0x000006ca        0xe PSB.o
-                0x000006ca                assemblyLcdCursor
- .text._GLOBAL__sub_I__Z22PIN_MANAGER_Initializev
                 0x000006d8        0xe PSB.o
+                0x000006d8                assemblyLcdCursor
+ .text._GLOBAL__sub_I__Z22PIN_MANAGER_Initializev
+                0x000006e6        0xe PSB.o
  .text._Z17delayMicrosecondsj
-                0x000006e6       0x10 timer.o
-                0x000006e6                _Z17delayMicrosecondsj
- .text.libgcc   0x000006f6        0xc c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_tablejump2.o)
-                0x000006f6                __tablejump2__
-                0x00000702                . = ALIGN (0x2)
+                0x000006f4       0x18 timer.o
+                0x000006f4                _Z17delayMicrosecondsj
+ .text.libgcc   0x0000070c        0xc c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_tablejump2.o)
+                0x0000070c                __tablejump2__
+                0x00000718                . = ALIGN (0x2)
  *(.fini9)
- .fini9         0x00000702        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
-                0x00000702                _exit
-                0x00000702                exit
+ .fini9         0x00000718        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
+                0x00000718                _exit
+                0x00000718                exit
  *(.fini9)
  *(.fini8)
  *(.fini8)
@@ -531,11 +533,11 @@ END GROUP
  *(.fini1)
  *(.fini1)
  *(.fini0)
- .fini0         0x00000702        0x4 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
+ .fini0         0x00000718        0x4 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
  *(.fini0)
-                0x00000706                _etext = .
+                0x0000071c                _etext = .
 
-.data           0x00800100        0xe load address 0x00000706
+.data           0x00800100        0xe load address 0x0000071c
                 0x00800100                PROVIDE (__data_start, .)
  *(.data)
  *(.data*)
@@ -558,8 +560,8 @@ END GROUP
                 0x0080011d                timer_us
  *(COMMON)
                 0x0080011f                PROVIDE (__bss_end, .)
-                0x00000706                __data_load_start = LOADADDR (.data)
-                0x00000714                __data_load_end = (__data_load_start + SIZEOF (.data))
+                0x0000071c                __data_load_start = LOADADDR (.data)
+                0x0000072a                __data_load_end = (__data_load_start + SIZEOF (.data))
 
 .noinit         0x0080011f        0x0
                 [!provide]                PROVIDE (__noinit_start, .)
@@ -639,7 +641,7 @@ END GROUP
 .debug_sfnames
  *(.debug_sfnames)
 
-.debug_aranges  0x00000000      0x248
+.debug_aranges  0x00000000      0x250
  *(.debug_aranges)
  .debug_aranges
                 0x00000000       0x20 Assembler1.o
@@ -656,14 +658,14 @@ END GROUP
  .debug_aranges
                 0x00000180       0x20 pinWrite.o
  .debug_aranges
-                0x000001a0       0x88 PSB.o
+                0x000001a0       0x90 PSB.o
  .debug_aranges
-                0x00000228       0x20 timer.o
+                0x00000230       0x20 timer.o
 
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x00000000     0x1d26
+.debug_info     0x00000000     0x1d58
  *(.debug_info .gnu.linkonce.wi.*)
  .debug_info    0x00000000      0x5f4 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.7.374/gcc/dev/atmega328p/avr5/crtatmega328p.o
  .debug_info    0x000005f4       0x8e Assembler1.o
@@ -673,8 +675,8 @@ END GROUP
  .debug_info    0x0000112f       0x92 mcc_generated_files/system/src/cpuint.o
  .debug_info    0x000011c1      0x1e0 mcc_generated_files/tc0/src/tc0.o
  .debug_info    0x000013a1       0xd4 pinWrite.o
- .debug_info    0x00001475      0x803 PSB.o
- .debug_info    0x00001c78       0xae timer.o
+ .debug_info    0x00001475      0x835 PSB.o
+ .debug_info    0x00001caa       0xae timer.o
 
 .debug_abbrev   0x00000000      0xd52
  *(.debug_abbrev)
@@ -689,30 +691,30 @@ END GROUP
  .debug_abbrev  0x00000aa7      0x230 PSB.o
  .debug_abbrev  0x00000cd7       0x7b timer.o
 
-.debug_line     0x00000000     0x1242
+.debug_line     0x00000000     0x127d
  *(.debug_line .debug_line.* .debug_line_end)
  .debug_line    0x00000000      0x134 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.7.374/gcc/dev/atmega328p/avr5/crtatmega328p.o
- .debug_line    0x00000134      0x489 Assembler1.o
- .debug_line    0x000005bd      0x2c5 lcd.o
- .debug_line    0x00000882       0xb1 mcc_generated_files/system/src/config_bits.o
- .debug_line    0x00000933      0x12a mcc_generated_files/system/src/cpu.o
- .debug_line    0x00000a5d       0xcc mcc_generated_files/system/src/cpuint.o
- .debug_line    0x00000b29      0x266 mcc_generated_files/tc0/src/tc0.o
- .debug_line    0x00000d8f       0xc1 pinWrite.o
- .debug_line    0x00000e50      0x33d PSB.o
- .debug_line    0x0000118d       0xb5 timer.o
+ .debug_line    0x00000134      0x4a7 Assembler1.o
+ .debug_line    0x000005db      0x2c5 lcd.o
+ .debug_line    0x000008a0       0xb1 mcc_generated_files/system/src/config_bits.o
+ .debug_line    0x00000951      0x12a mcc_generated_files/system/src/cpu.o
+ .debug_line    0x00000a7b       0xcc mcc_generated_files/system/src/cpuint.o
+ .debug_line    0x00000b47      0x266 mcc_generated_files/tc0/src/tc0.o
+ .debug_line    0x00000dad       0xc1 pinWrite.o
+ .debug_line    0x00000e6e      0x354 PSB.o
+ .debug_line    0x000011c2       0xbb timer.o
 
-.debug_frame    0x00000000      0x408
+.debug_frame    0x00000000      0x418
  *(.debug_frame)
  .debug_frame   0x00000000      0x10c lcd.o
  .debug_frame   0x0000010c       0x64 mcc_generated_files/system/src/cpu.o
  .debug_frame   0x00000170       0x24 mcc_generated_files/system/src/cpuint.o
  .debug_frame   0x00000194       0xf8 mcc_generated_files/tc0/src/tc0.o
  .debug_frame   0x0000028c       0x24 pinWrite.o
- .debug_frame   0x000002b0      0x134 PSB.o
- .debug_frame   0x000003e4       0x24 timer.o
+ .debug_frame   0x000002b0      0x144 PSB.o
+ .debug_frame   0x000003f4       0x24 timer.o
 
-.debug_str      0x00000000      0xab2
+.debug_str      0x00000000      0xac3
  *(.debug_str)
  .debug_str     0x00000000      0x208 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.7.374/gcc/dev/atmega328p/avr5/crtatmega328p.o
  .debug_str     0x00000208      0x377 lcd.o
@@ -727,9 +729,9 @@ END GROUP
                                 0x359 (size before relaxing)
  .debug_str     0x00000913       0x12 pinWrite.o
                                 0x1e6 (size before relaxing)
- .debug_str     0x00000925      0x17e PSB.o
-                                0x534 (size before relaxing)
- .debug_str     0x00000aa3        0xf timer.o
+ .debug_str     0x00000925      0x18f PSB.o
+                                0x545 (size before relaxing)
+ .debug_str     0x00000ab4        0xf timer.o
                                 0x1e3 (size before relaxing)
 
 .debug_loc      0x00000000      0x825
@@ -758,15 +760,15 @@ END GROUP
 .debug_pubtypes
  *(.debug_pubtypes)
 
-.debug_ranges   0x00000000      0x1a0
+.debug_ranges   0x00000000      0x1a8
  *(.debug_ranges)
  .debug_ranges  0x00000000       0x58 lcd.o
  .debug_ranges  0x00000058       0x30 mcc_generated_files/system/src/cpu.o
  .debug_ranges  0x00000088       0x10 mcc_generated_files/system/src/cpuint.o
  .debug_ranges  0x00000098       0x70 mcc_generated_files/tc0/src/tc0.o
  .debug_ranges  0x00000108       0x10 pinWrite.o
- .debug_ranges  0x00000118       0x78 PSB.o
- .debug_ranges  0x00000190       0x10 timer.o
+ .debug_ranges  0x00000118       0x80 PSB.o
+ .debug_ranges  0x00000198       0x10 timer.o
 
 .debug_macro
  *(.debug_macro)
