@@ -89,12 +89,16 @@ loop:
 
 add_sec:
 	cpi EDIT, 0
-	BRNE stopped
+	BREQ do_add
+	cpi EDIT, 4
+	breq do_add
+	rjmp stopped
+stopped:
+	ret
+do_add:
 	cpi S, 59
 	breq add_min
 	inc S
-	ret
-stopped:
 	ret
 add_min:
 	clr S // zera os segundos
@@ -173,7 +177,7 @@ PCINT1_vect:
 
 
 TIMER1_Handler:
-	cpi  EDIT, 4
+	cpi  EDIT, 5
 	breq dec_mode
 
 add_mode:
@@ -201,7 +205,7 @@ PCINT1_Handler:
 	rjmp end 
 skip:
 	inc EDIT
-	cpi EDIT, 5
+	cpi EDIT, 6
 	brne skip_end
 	clr EDIT
 skip_end:
@@ -210,6 +214,8 @@ skip_end:
 	cpi EDIT, 0
 	breq turnTmr1On
 	cpi EDIT, 4
+	breq turnTmr1On
+	cpi EDIT, 5
 	breq turnTmr1On
 	rjmp loop
 
