@@ -15,7 +15,7 @@ Este projeto implementa um relógio digital completo no microcontrolador **ATmeg
 
 | EDIT | Função                           |
 |------|--------------------------------- |
-| 0    | Contagem normal (incrementa)     |
+| 0    | Contagem normal                  |
 | 1    | Edição de segundos               |
 | 2    | Edição de minutos                |
 | 3    | Edição de horas                  |
