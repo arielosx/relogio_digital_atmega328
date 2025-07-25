@@ -26,7 +26,7 @@ rjmp main // reset
 .org 0x8
 rjmp PCINT1_vect // PCINT1C
 .org 0x10
-rjmp TIMER1_OVF_vect
+rjmp TIMER1_COMPA_vect
 .global main 
 .org 0xF0
 main:
@@ -47,17 +47,26 @@ main:
 	sts PCICR, AUX // Ativa PCINT da porta C 
 	ldi AUX, 0b00111000
 	sts PCMSK1, AUX ; Habilita PCINT13, PCINT12 e PCINT11
-	
-	;Prescaler de 256 para definir a freq como 1Hz 
-    ldi AUX, 0b100 
-    sts TCCR1B, AUX ;(1<<CS22)|(1<<CS21)
-	
-	;ativa interrupção por overflow de TIMER1
-	ldi AUX, 0b1
-    sts TIMSK1, AUX
+
+
+	;zerando timer 1 em caso de haver lixo
 	ldi AUX, 0x00
 	sts TCNT1H, AUX   
 	sts TCNT1L, AUX 
+	
+	;Habilitando comparação e Prescaler de 256 para definir a freq como 1Hz 
+    	ldi AUX, 0b1100 
+    	sts TCCR1B, AUX ;(1<<WGM12)|(1<<CS22) 
+
+	;settando numero de comparação para resetar o timer e chamar a interrupção
+	ldi AUX, 0xF4
+	sts OCR1AH, AUX
+	ldi AUX, 0x23
+	sts OCR1A, AUX
+
+	;ativa interrupção por comparação de TIMER1
+	ldi AUX, 0b10
+   	sts TIMSK1, AUX; 
 	
 	ldi r18, 0
 
@@ -161,8 +170,8 @@ countdown_active:
 	cbi PORTD, PD2
 	ret
 
-.global TIMER1_OVF_vect
-TIMER1_OVF_vect:
+.global TIMER1_COMPA_vect
+TIMER1_COMPA_vect:
 	sbr FLAGS, (1<<TMR_BIT)
 	reti
 
