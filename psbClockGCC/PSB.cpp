@@ -46,7 +46,7 @@ extern "C" void assemblyLcdPrintTest(void)
 
 extern "C" void assemblyLcdPrintHours(uint8_t value)
 {
-	lcd.write("    ");
+	lcd.write("  ");
 	uint8_t digits[2] = {0, 0};	
 	getDigits(value, &digits[0]);
 	lcd.write(digits[1]);
@@ -97,5 +97,9 @@ extern "C" void assemblyLcdReset()
 }
 
 
-
+extern "C" void assemblyLcdPrintMode(uint8_t mode)
+{
+	if(mode) lcd.write("C:");
+	else lcd.write("R:");
+}
 
