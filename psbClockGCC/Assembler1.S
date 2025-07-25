@@ -112,8 +112,54 @@ clr_hour:
 	clr H // pula de 23h para 0h
 	ret
 	
+decr_sec:
+	cpi S, 0
+	breq decr_min
+	dec S
+	rjmp check_zero
 
-	
+decr_min:
+	cpi M, 0
+	breq decr_hour
+	ldi S, 59
+	dec M
+	rjmp check_zero
+
+decr_hour:
+	cpi H, 0
+	breq zero
+	ldi M, 59
+	ldi S, 59
+	dec H
+	rjmp check_zero
+
+zero:
+	clr S
+	clr M
+	clr H
+	rcall finish_timer
+	ret
+
+finish_timer:
+	sbi PORTD, PD2
+	ldi AUX, 0x00
+	sts TIMSK1, AUX
+	ret
+
+check_zero:
+	cpi H, 0
+	brne countdown_active
+	cpi M, 0
+	brne countdown_active
+	cpi S, 0
+	brne countdown_active
+	rcall finish_timer 
+	ret
+
+countdown_active:
+	cbi PORTD, PD2
+	ret
+
 .global TIMER1_OVF_vect
 TIMER1_OVF_vect:
 	sbr FLAGS, (1<<TMR_BIT)
@@ -127,11 +173,19 @@ PCINT1_vect:
 
 
 TIMER1_Handler:
-	rcall toggle_led
+	cpi  EDIT, 4
+	breq dec_mode
+
+add_mode:
 	rcall add_sec
+	rjmp handler_exit
+
+dec_mode:
+	rcall decr_sec
+	rjmp handler_exit
+
+handler_exit:
 	cbr FLAGS, (1<<TMR_BIT)
-	cpi EDIT, 0
-	BRNE loop
 	rjmp end
 
 
@@ -147,7 +201,7 @@ PCINT1_Handler:
 	rjmp end 
 skip:
 	inc EDIT
-	cpi EDIT, 4
+	cpi EDIT, 5
 	brne skip_end
 	clr EDIT
 skip_end:
@@ -155,9 +209,12 @@ skip_end:
 	breq turnTmr1Off
 	cpi EDIT, 0
 	breq turnTmr1On
+	cpi EDIT, 4
+	breq turnTmr1On
 	rjmp loop
 
 turnTmr1On:
+	cbi PORTD, PD2
 	ldi AUX, 0b1
     sts TIMSK1, AUX
 	rjmp loop
